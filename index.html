@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30-Day Creative Code Challenge</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0f0f14;
+    color: #e2e8f0;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #a78bfa, #38bdf8, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.4rem;
+  }
+
+  header p {
+    color: #94a3b8;
+    font-size: 0.95rem;
+  }
+
+  .progress-bar-wrap {
+    background: #1e1e2e;
+    border-radius: 999px;
+    height: 10px;
+    max-width: 500px;
+    margin: 1rem auto 0;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #a78bfa, #38bdf8);
+    transition: width 0.5s ease;
+  }
+
+  .progress-label {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-top: 0.4rem;
+  }
+
+  .week-section {
+    margin-bottom: 2rem;
+  }
+
+  .week-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 0.8rem;
+    padding-left: 0.25rem;
+  }
+
+  .week-title span {
+    color: #a78bfa;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .card {
+    background: #1a1a27;
+    border: 1px solid #2a2a3e;
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    border-color: #a78bfa55;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px #0006;
+  }
+
+  .card.done {
+    background: #16213a;
+    border-color: #38bdf855;
+    opacity: 0.8;
+  }
+
+  .card.done::after {
+    content: '✓';
+    position: absolute;
+    top: 0.65rem;
+    right: 0.75rem;
+    font-size: 1rem;
+    color: #38bdf8;
+    font-weight: 700;
+  }
+
+  .card-day {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 0.3rem;
+  }
+
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 0.35rem;
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+
+  .tag {
+    display: inline-block;
+    margin-top: 0.55rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+  }
+
+  .tag-constraint { background: #3b1f6a; color: #c4b5fd; }
+  .tag-remix     { background: #1a3a2a; color: #6ee7b7; }
+  .tag-collab    { background: #1a2d3a; color: #7dd3fc; }
+  .tag-wild      { background: #3a1a1a; color: #fca5a5; }
+  .tag-reflect   { background: #2a2a1a; color: #fde68a; }
+
+  .reset-btn {
+    display: block;
+    margin: 2rem auto 0;
+    background: transparent;
+    border: 1px solid #2a2a3e;
+    color: #64748b;
+    font-size: 0.8rem;
+    padding: 0.5rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover { border-color: #a78bfa88; color: #a78bfa; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>30-Day Creative Code Challenge</h1>
+  <p>One tiny creative stretch per day. Click a card to mark it done.</p>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="bar" style="width:0%"></div>
+  </div>
+  <div class="progress-label" id="label">0 / 30 completed</div>
+</header>
+
+<div id="challenge-grid"></div>
+
+<button class="reset-btn" onclick="resetAll()">Reset all progress</button>
+
+<script>
+const challenges = [
+  // WEEK 1 — Constraints
+  { day:1,  title:"One Function, One Rule",       desc:"Write a function that does something useful — but it can only use a single line of code.",                          tag:"constraint" },
+  { day:2,  title:"No Variables Allowed",         desc:"Solve FizzBuzz (or any small problem) without declaring a single variable.",                                        tag:"constraint" },
+  { day:3,  title:"Build With 10 Lines",          desc:"Build the smallest useful CLI tool you can imagine — hard cap: 10 lines.",                                          tag:"constraint" },
+  { day:4,  title:"Comment-Driven Design",        desc:"Write the comments for a feature first, every step, then fill in the code second. Did the plan hold?",             tag:"reflect" },
+  { day:5,  title:"Forbidden Loop",               desc:"Implement any iterative task (e.g. sum a list) without using any loop syntax — recursion, higher-order fns only.",  tag:"constraint" },
+  { day:6,  title:"Tiny API Adventure",           desc:"Call any free public API and display one surprising or funny data point in the terminal.",                          tag:"wild" },
+  { day:7,  title:"Week 1 Retro",                 desc:"Write a 5-bullet README for what you built this week. What felt hardest? What surprised you?",                      tag:"reflect" },
+
+  // WEEK 2 — Remix
+  { day:8,  title:"Steal Like an Engineer",       desc:"Find an open-source project you admire and rewrite one small function in a completely different style.",            tag:"remix" },
+  { day:9,  title:"Language Swap",                desc:"Take yesterday's snippet and re-implement it in a language you rarely use.",                                        tag:"remix" },
+  { day:10, title:"Analogy Machine",              desc:"Explain how a `for` loop works using only a cooking recipe analogy — no jargon.",                                   tag:"reflect" },
+  { day:11, title:"Ugly → Beautiful",             desc:"Find the messiest piece of code you've ever written. Refactor it purely for readability — no new features.",        tag:"remix" },
+  { day:12, title:"Random Prompt Generator",      desc:"Build a tiny script that generates random creative writing prompts. Use it yourself.",                              tag:"wild" },
+  { day:13, title:"Pair Debug Session",           desc:"Explain a bug you're stuck on to a rubber duck (or a friend) out loud. Write up what you discovered.",             tag:"collab" },
+  { day:14, title:"Week 2 Retro",                 desc:"Compare your coding style now vs. a year ago. What's one habit you've shed? One you've gained?",                   tag:"reflect" },
+
+  // WEEK 3 — Collaboration & Output
+  { day:15, title:"Open Source Micro-PR",         desc:"Find any repo, fix a typo, improve a doc, or add a missing test. Open a real PR.",                                 tag:"collab" },
+  { day:16, title:"Code as Art",                  desc:"Write a programme whose sole output is a piece of ASCII art you designed from scratch.",                            tag:"wild" },
+  { day:17, title:"Teach It",                     desc:"Record a 2-minute Loom (or write a Twitter/X thread) teaching one concept you learnt recently.",                   tag:"collab" },
+  { day:18, title:"Reverse Engineer",             desc:"Pick any website's UI element you find elegant. Try to recreate it from scratch without peeking at their source.",  tag:"remix" },
+  { day:19, title:"Error Message Poet",           desc:"Rewrite 5 common error messages (404, null pointer, etc.) as haiku.",                                              tag:"wild" },
+  { day:20, title:"Pair Programming Date",        desc:"Spend 30 min coding with someone — colleague, friend, or a stranger on Discord. Swap driver every 10 min.",        tag:"collab" },
+  { day:21, title:"Week 3 Retro",                 desc:"What's one thing you built this month you're genuinely proud of? Write a one-paragraph celebration of it.",        tag:"reflect" },
+
+  // WEEK 4 — Go Wild
+  { day:22, title:"Constraint Roulette",          desc:"Roll a die. Odd = write code with no `if` statements. Even = write code with no functions. Go.",                   tag:"constraint" },
+  { day:23, title:"Build for a Non-Dev",          desc:"Build something (a script, a tool, a tiny app) whose only user is someone who never writes code.",                 tag:"wild" },
+  { day:24, title:"Time-Boxed Prototype",         desc:"Set a 25-minute timer. Build the smallest possible version of an app idea you've been postponing.",                tag:"wild" },
+  { day:25, title:"Interview Yourself",           desc:"Write 5 interview questions about a codebase you own, then answer them honestly.",                                  tag:"reflect" },
+  { day:26, title:"Creative Stack Swap",          desc:"Pick one tool in your stack you rely on and spend a day using its competitor instead.",                             tag:"remix" },
+  { day:27, title:"Generative Surprise",          desc:"Write code that generates something you couldn't have predicted — music, images, text, patterns.",                  tag:"wild" },
+  { day:28, title:"Open Source Thank-You",        desc:"Write a genuine thank-you issue or discussion post for a library that has saved you hours.",                       tag:"collab" },
+
+  // DAYS 29–30 — Finale
+  { day:29, title:"The Big Idea Draft",           desc:"Write a one-page spec for a creative side project you'd build if you had a free week. Be ambitious.",              tag:"wild" },
+  { day:30, title:"30-Day Showcase",              desc:"Share anything you made this month — a repo, a screenshot, a post. You earned it. 🎉",                             tag:"reflect" },
+];
+
+const STORAGE_KEY = 'ctm_creative_code_30';
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+}
+function save(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+const tagLabel = { constraint:"Constraint", remix:"Remix", collab:"Collab", wild:"Go Wild", reflect:"Reflect" };
+
+function render() {
+  const state = load();
+  const grid  = document.getElementById('challenge-grid');
+  grid.innerHTML = '';
+
+  const weeks = [
+    { label: 'Week 1 — Embrace Constraints', days: challenges.slice(0,7) },
+    { label: 'Week 2 — Remix & Reframe',     days: challenges.slice(7,14) },
+    { label: 'Week 3 — Collab & Publish',    days: challenges.slice(14,21) },
+    { label: 'Week 4 — Go Wild',             days: challenges.slice(21,28) },
+    { label: 'Finale',                       days: challenges.slice(28) },
+  ];
+
+  weeks.forEach((week, wi) => {
+    const sec = document.createElement('div');
+    sec.className = 'week-section';
+
+    const title = document.createElement('div');
+    title.className = 'week-title';
+    title.innerHTML = `<span>Week ${wi+1 <= 4 ? wi+1 : '★'}</span> — ${week.label.split('—')[1]?.trim() || 'Finale'}`;
+    sec.appendChild(title);
+
+    const cards = document.createElement('div');
+    cards.className = 'cards';
+
+    week.days.forEach(ch => {
+      const card = document.createElement('div');
+      card.className = 'card' + (state[ch.day] ? ' done' : '');
+      card.innerHTML = `
+        <div class="card-day">Day ${ch.day}</div>
+        <div class="card-title">${ch.title}</div>
+        <div class="card-desc">${ch.desc}</div>
+        <span class="tag tag-${ch.tag}">${tagLabel[ch.tag]}</span>
+      `;
+      card.addEventListener('click', () => toggle(ch.day));
+      cards.appendChild(card);
+    });
+
+    sec.appendChild(cards);
+    grid.appendChild(sec);
+  });
+
+  updateProgress(state);
+}
+
+function toggle(day) {
+  const state = load();
+  state[day] = !state[day];
+  save(state);
+  render();
+}
+
+function updateProgress(state) {
+  const done = Object.values(state).filter(Boolean).length;
+  const pct  = Math.round((done / 30) * 100);
+  document.getElementById('bar').style.width   = pct + '%';
+  document.getElementById('label').textContent = `${done} / 30 completed`;
+}
+
+function resetAll() {
+  if (confirm('Reset all progress?')) { localStorage.removeItem(STORAGE_KEY); render(); }
+}
+
+render();
+</script>
+</body>
+</html>
