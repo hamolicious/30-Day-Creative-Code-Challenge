@@ -1,4 +1,4 @@
-def useful(month: str) -> int | None:
+def month_str_to_int(month: str) -> int | None:
     return {
         "january": 1,
         "february": 2,
