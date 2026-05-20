@@ -2,7 +2,7 @@
 ; - [x] fix mod op
 ; - [x] make it print FizzBuzz
 ; - [ ] print counter instead of "Neit"
-; - [ ] println instead of print
+; - [x] println instead of print
 
 
 section .data
@@ -73,7 +73,7 @@ print:
     push ebx                ; save counter value
     mov eax, 4              ; syscall: sys_write
     mov ebx, 1              ; fd: stdout
-    mov edx, 4              ; fizz and buzz are both len 4
+    mov edx, 5              ; fizz and buzz are both len 4 + nl
     int 0x80                ; call kernel
     pop ebx                 ; restore counter
     ret
