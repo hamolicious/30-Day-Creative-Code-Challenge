@@ -1,13 +1,13 @@
 section .data
     fizz db "Fizz", 0x0a
     buzz db "Buzz", 0x0a
-    neither db "Neither", 0x0a    ; DEBUG, i dont know how to print ints yet
+    neither db "Neit", 0x0a    ; DEBUG, i dont know how to print ints yet
 
 section .text
     global _start
 
 _start:
-    mov ebx, 0              ; prime counter with 1
+    mov ebx, 0      ; prime counter with 1
     call loop
     call exit
 
