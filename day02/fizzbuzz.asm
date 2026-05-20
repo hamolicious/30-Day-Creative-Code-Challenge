@@ -1,3 +1,10 @@
+; todo:
+; - [ ] fix mod op
+; - [ ] make it print FizzBuzz
+; - [ ] print counter instead of "Neit"
+; - [ ] println instead of print
+
+
 section .data
     fizz db "Fizz", 0x0a
     buzz db "Buzz", 0x0a
