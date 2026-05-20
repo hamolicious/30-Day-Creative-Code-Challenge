@@ -1,5 +1,5 @@
 ; todo:
-; - [ ] fix mod op
+; - [x] fix mod op
 ; - [ ] make it print FizzBuzz
 ; - [ ] print counter instead of "Neit"
 ; - [ ] println instead of print
@@ -21,21 +21,21 @@ _start:
 loop:
     inc ebx         ; count +1 in rax
 
-    mov eax, ebx    ; temp store ecx
+    mov eax, ebx    ; temp store ebx
     sub eax, 25     ; check if eax has counted to X
     je exit         ; exit if so
 
     mov eax, ebx    ; dividend
-    xor edx, edx    ; zero EDX (required!, # QUESTION: why?)
-    mov eax, 3      ; divisor
-    div ebx         ; div counter by 3
+    mov ecx, 3      ; divisor
+    xor edx, edx    ; zero EDX (top half of 'EDX:EAX')
+    div ecx         ; div counter by 3
     cmp edx, 0
     je is_fizz
 
     mov eax, ebx    ; dividend
+    mov ecx, 5      ; divisor
     xor edx, edx    ; zero EDX
-    mov eax, 5      ; divisor
-    div ebx         ; div counter by 5
+    div ecx         ; div counter by 5
     cmp edx, 0
     je is_buzz
 
