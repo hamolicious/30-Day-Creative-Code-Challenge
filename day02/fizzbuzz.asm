@@ -1,6 +1,6 @@
 ; todo:
 ; - [x] fix mod op
-; - [ ] make it print FizzBuzz
+; - [x] make it print FizzBuzz
 ; - [ ] print counter instead of "Neit"
 ; - [ ] println instead of print
 
@@ -24,6 +24,13 @@ loop:
     mov eax, ebx    ; temp store ebx
     sub eax, 25     ; check if eax has counted to X
     je exit         ; exit if so
+
+    mov eax, ebx    ; dividend
+    mov ecx, 15     ; divisor
+    xor edx, edx    ; zero EDX (top half of 'EDX:EAX')
+    div ecx         ; div counter by 3
+    cmp edx, 0
+    je is_both
 
     mov eax, ebx    ; dividend
     mov ecx, 3      ; divisor
@@ -51,6 +58,13 @@ is_fizz:            ; print fizz
 
 is_buzz:
     mov ecx, buzz   ; print fizz
+    call print
+    jmp loop
+
+is_both:
+    mov ecx, fizz   ; print fizz
+    call print
+    mov ecx, buzz   ; print buzz
     call print
     jmp loop
 
